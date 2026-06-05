@@ -1,73 +1,70 @@
-# Einstein's Riddle CSP Solver
+# AI-E-learning-1
 
-Repo này triển khai bài tập **3.3 Einstein's Riddle (The Zebra Puzzle)** bằng mô hình CSP. Chương trình dùng AC-3 để cắt miền trước, sau đó dùng Backtracking với MRV để tìm nghiệm đầy đủ.
+Einstein's Riddle CSP Solver for exercise **3.3 Einstein's Riddle (The Zebra Puzzle)**.
 
-## Mục tiêu bài
+The program solves the puzzle with:
 
-Bài toán có 5 ngôi nhà. Mỗi nhà có một màu, một quốc tịch, một đồ uống, một loại thuốc lá và một thú cưng. Không có hai nhà nào trùng giá trị trong cùng một nhóm thuộc tính.
+- CSP modeling
+- AC-3 domain pruning
+- Backtracking search with MRV
+- Relative constraints
+- All-Different constraints
 
-Yêu cầu chính của đề:
-
-- Mô hình hóa bài toán dưới dạng CSP.
-- Dùng AC-3.
-- Dùng Backtracking.
-- Trả lời:
-  - Ai nuôi Zebra?
-  - Ai uống Water?
-
-## Cách chạy
-
-```powershell
-python src/einstein_csp.py
-```
-
-Nếu Windows chưa nhận lệnh `python`, thử:
-
-```powershell
-py -3 src/einstein_csp.py
-```
-
-Kết quả đúng cần thấy:
+## Expected Answer
 
 ```text
 Who owns the Zebra? Japanese
 Who drinks Water? Norwegian
 ```
 
-## Cách chạy test
+## How To Run
+
+```powershell
+python src/einstein_csp.py
+```
+
+If Windows does not recognize `python`, try:
+
+```powershell
+py -3 src/einstein_csp.py
+```
+
+## How To Run Tests
 
 ```powershell
 python -m unittest
 ```
 
-Lệnh dự phòng trên Windows:
+Fallback on Windows:
 
 ```powershell
 py -3 -m unittest
 ```
 
-## Cấu trúc repo
+## Repo Structure
 
-- `src/einstein_csp.py`: code CSP, constraints, AC-3, Backtracking và in nghiệm.
-- `tests/test_einstein_csp.py`: test ràng buộc tương đối, All-Different, AC-3 và nghiệm cuối.
-- `docs/khac_truong.md`: phần Khắc Trường phụ trách để đưa vào báo cáo.
-- `docs/next_steps.md`: hướng dẫn các phần kế tiếp cho các nhóm còn lại.
+- `src/einstein_csp.py`: CSP model, constraints, AC-3, Backtracking, and result formatting.
+- `tests/test_einstein_csp.py`: tests for relative constraints, All-Different, AC-3, and final answer.
+- `docs/khac_truong.md`: report notes for Khac Truong's assigned part.
+- `docs/next_steps.md`: next steps for the remaining groups.
 
-## Mô hình CSP
+## CSP Model
 
-Code biểu diễn mỗi thuộc tính là một biến vị trí nhà. Ví dụ:
+Each attribute is represented as a variable whose value is the house position from left to right.
 
-- `Norwegian = 1`: người Na Uy ở nhà đầu tiên.
-- `Milk = 3`: sữa được uống ở nhà giữa.
-- `Green = Ivory + 1`: nhà xanh lá nằm ngay bên phải nhà màu ngà.
-- `abs(Kools - Horse) == 1`: nhà hút Kools nằm cạnh nhà nuôi ngựa.
+Examples:
 
-Miền giá trị của mọi biến là `{1, 2, 3, 4, 5}`.
+- `Norwegian = 1`: Norwegian lives in the first house.
+- `Milk = 3`: Milk is drunk in the middle house.
+- `Green = Ivory + 1`: Green house is immediately right of Ivory house.
+- `abs(Kools - Horse) == 1`: Kools is smoked next to the Horse.
 
-## Phần Khắc Trường cần tập trung
+All variables use the domain `{1, 2, 3, 4, 5}`.
 
-Trong `src/einstein_csp.py`, phần quan trọng nhất là:
+## Khac Truong's Focus
+
+In `src/einstein_csp.py`, focus on:
 
 - `build_relative_constraints()`: clue 5, 10, 11, 14, 15.
-- `build_all_different_constraints()`: không cho trùng màu, quốc tịch, đồ uống, thuốc lá, thú cưng.
-- `immediate_right()` và `next_to()`: hai công thức xử lý vị trí tương đối giữa các nhà.
+- `build_all_different_constraints()`: prevents duplicate positions inside each group.
+- `immediate_right()` and `next_to()`: formulas for position-based clues.
