@@ -1,71 +1,50 @@
-# Phần Khắc Trường - Ràng Buộc Phức Tạp Và Điều Phối
+# Phần Khắc Trường - Ràng buộc tương đối và All-Different
 
-## Vai trò chính
+Đây là một phần nhỏ trong báo cáo nhóm của bài 3.3 Einstein's Riddle. Nội dung tập trung vào cách biểu diễn các ràng buộc phức tạp của bài toán CSP, không tách thành báo cáo cá nhân riêng.
 
-Khắc Trường phụ trách các ràng buộc có liên quan đến vị trí tương đối giữa các ngôi nhà và ràng buộc All-Different. Đây là phần giúp bài toán không chỉ so sánh hai thuộc tính trong cùng một nhà, mà còn biểu diễn quan hệ "bên phải" và "kế bên".
+## Nhiệm vụ
 
-Ngoài phần code, Khắc Trường cũng là người điều phối ghép code giữa các nhóm: dữ liệu cơ bản, AC-3, Backtracking và phần tổng hợp báo cáo.
+- Xử lý các ràng buộc tương đối giữa vị trí các ngôi nhà.
+- Trình bày ràng buộc All-Different cho từng nhóm thuộc tính.
+- Đảm bảo các ràng buộc này phù hợp với mô hình CSP chung của cả nhóm.
 
-## Các dòng code cần tập trung
+## Biểu diễn
 
-Trong `src/einstein_csp.py`, phần quan trọng nhất của Khắc Trường nằm ở:
+Đánh số 5 ngôi nhà từ trái sang phải là `1, 2, 3, 4, 5`. Mỗi thuộc tính được xem như một biến nhận giá trị là vị trí ngôi nhà.
 
-- Dòng 31-37: chia 25 biến thành 5 nhóm thuộc tính để áp dụng All-Different.
-- Dòng 92-99: hai hàm nền cho ràng buộc tương đối: `immediate_right` và `next_to`.
-- Dòng 102-117: sinh ràng buộc All-Different cho từng nhóm.
-- Dòng 120-154: khai báo 5 clue tương đối: clue 5, 10, 11, 14, 15.
-- Dòng 186-187: ghép phần ràng buộc tương đối và All-Different vào bài toán chung.
-- Dòng 191-223: AC-3 dùng các ràng buộc nhị phân này để cắt domain.
+Ví dụ:
+
+- `Norwegian = 1`: người Na Uy ở nhà số 1.
+- `Milk = 3`: sữa được uống ở nhà số 3.
+- `Green = Ivory + 1`: nhà xanh lá ở ngay bên phải nhà màu ngà.
 
 ## Ràng buộc tương đối
 
-Trong mô hình CSP này, mỗi thuộc tính được biểu diễn bằng vị trí nhà từ 1 đến 5. Nhờ vậy, các clue tương đối có thể viết thành công thức số học.
+Các clue tương đối được viết dưới dạng quan hệ vị trí:
 
-Các clue Khắc Trường cần xử lý:
+| Clue | Công thức | Ý nghĩa |
+|---|---|---|
+| 5 | `Green = Ivory + 1` | Nhà xanh lá nằm ngay bên phải nhà màu ngà. |
+| 10 | `|Chesterfields - Fox| = 1` | Người hút Chesterfields ở cạnh nhà nuôi cáo. |
+| 11 | `|Kools - Horse| = 1` | Nhà hút Kools ở cạnh nhà nuôi ngựa. |
+| 14 | `|Norwegian - Blue| = 1` | Người Na Uy sống cạnh nhà xanh lam. |
+| 15 | `|Chesterfields - Water| = 1` | Người hút Chesterfields có hàng xóm uống nước. |
 
-- Clue 5: `Green = Ivory + 1`
-  - Nhà xanh lá nằm ngay bên phải nhà màu ngà.
-- Clue 10: `abs(Chesterfields - Fox) = 1`
-  - Người hút Chesterfields ở cạnh nhà người nuôi cáo.
-- Clue 11: `abs(Kools - Horse) = 1`
-  - Nhà hút Kools ở cạnh nhà nuôi ngựa.
-- Clue 14: `abs(Norwegian - Blue) = 1`
-  - Người Na Uy sống cạnh nhà màu xanh lam.
-- Clue 15: `abs(Chesterfields - Water) = 1`
-  - Người hút Chesterfields có hàng xóm uống nước.
+## Ràng buộc All-Different
 
-Trong code, các ràng buộc này nằm ở hàm `build_relative_constraints()` trong `src/einstein_csp.py`.
+Trong mỗi nhóm thuộc tính, các giá trị không được trùng vị trí:
 
-## All-Different
+- `All-Different(Red, Green, Ivory, Yellow, Blue)`
+- `All-Different(Brit, Spaniard, Ukrainian, Norwegian, Japanese)`
+- `All-Different(Coffee, Tea, Milk, OrangeJuice, Water)`
+- `All-Different(OldGold, Kools, Chesterfields, LuckyStrike, Parliaments)`
+- `All-Different(Dog, Snails, Fox, Horse, Zebra)`
 
-All-Different đảm bảo các giá trị trong cùng một nhóm thuộc tính không được trùng vị trí. Ví dụ, 5 màu nhà phải nằm ở 5 vị trí khác nhau:
+Ràng buộc này đảm bảo mỗi màu nhà, mỗi quốc tịch, mỗi đồ uống, mỗi loại thuốc lá và mỗi thú cưng chỉ xuất hiện một lần.
 
-```text
-Red != Green != Ivory != Yellow != Blue
-```
+## Kết quả liên quan
 
-Tương tự, chương trình áp dụng All-Different cho:
+Khi kết hợp các ràng buộc tương đối, All-Different và các clue còn lại, nghiệm cuối thỏa mãn bài toán là:
 
-- `Color`
-- `Nationality`
-- `Drink`
-- `Tobacco`
-- `Pet`
-
-Trong code, All-Different được chuyển thành các ràng buộc nhị phân từng cặp để AC-3 có thể xử lý.
-
-## Phần điều phối merge code
-
-Khi các nhóm hoàn thiện phần riêng, Khắc Trường nên kiểm tra trước khi merge:
-
-- Tất cả nhóm dùng cùng một tên biến: `OrangeJuice`, `OldGold`, `LuckyStrike`, `Chesterfields`, `Parliaments`.
-- Không nhóm nào tự đổi miền vị trí nhà khỏi `{1, 2, 3, 4, 5}`.
-- AC-3 nhận được danh sách binary arcs từ cùng mô hình CSP.
-- Backtracking gọi lại `csp.is_consistent(...)` sau mỗi lần gán.
-- Kết quả cuối cùng vẫn là `Japanese` nuôi `Zebra` và `Norwegian` uống `Water`.
-
-## Nội dung đưa vào báo cáo
-
-Có thể tóm tắt phần của Khắc Trường như sau:
-
-> Để xử lý các clue tương đối, nhóm biểu diễn mỗi thuộc tính bằng vị trí ngôi nhà. Cách này biến các quan hệ "ngay bên phải" và "kế bên" thành các ràng buộc số học như `Green = Ivory + 1` hoặc `abs(A - B) = 1`. Ngoài ra, ràng buộc All-Different được áp dụng cho từng nhóm thuộc tính để đảm bảo không có hai nhà trùng màu, quốc tịch, đồ uống, thuốc lá hoặc thú cưng.
+- Người nuôi Zebra: `Japanese`
+- Người uống Water: `Norwegian`
